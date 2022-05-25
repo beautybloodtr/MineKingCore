@@ -1,0 +1,11 @@
+# MINEKING CORE - BEAUTYBLOOD
+
+settings:
+   unicode-crash: true
+   block-spawner-egg-change: true
+   block-cactus-damage: true
+   block-trades: true
+   # SpawnEvent
+   block-spawns: true
+   block-spawned-mobs:
+   - BARIS

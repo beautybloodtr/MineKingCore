@@ -1,0 +1,5 @@
+name: MineKingCore
+main: mineking.beautyblood.MineKing
+authors: [BeautyBlood]
+description: MKCORE
+version: MK

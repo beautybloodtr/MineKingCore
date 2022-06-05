@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import mineking.beautyblood.listeners.UUIDListener;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -17,8 +18,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-
+import org.bukkit.entity.Blaze;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
@@ -32,6 +32,7 @@ public class MineKing extends JavaPlugin implements Listener {
 		File file = new File("plugins/MineKingCore/config.yml");
 		if (!file.exists())
 			instance.saveDefaultConfig();
+		@SuppressWarnings("unused")
 		YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(file);
 	}
 
@@ -68,7 +69,7 @@ public class MineKing extends JavaPlugin implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		if (!getConfig().getBoolean("settings.unicode-crash")) {
+		if (!getConfig().getBoolean("settings.unicodeCrash")) {
 			return;
 		}
 		if (containsBadCharacter(event.getMessage())) {
@@ -77,11 +78,25 @@ public class MineKing extends JavaPlugin implements Listener {
 		return;
 	}
 
+
+	
+    @EventHandler
+    public void onHit(EntityDamageByBlockEvent e) {
+    	if (!getConfig().getBoolean("settings.blockBlazeWaterDamage")) {
+    		return;
+    	}
+        if (e.getEntity() instanceof Blaze) {
+            if(e.getDamager().isLiquid() && e.getDamager().getType() == Material.WATER) {
+                e.setCancelled(true);
+            }
+        }
+    }
+    
 	public void MobSpawn(CreatureSpawnEvent e) {
-		if (!getConfig().getBoolean("settings.block-spawns")) {
+		if (!getConfig().getBoolean("settings.blockMobSpawns")) {
 			return;
 		}
-		for (String entity : getConfig().getStringList("settings.block-spawned-mobs")) {
+		for (String entity : getConfig().getStringList("settings.blockSpawnMobs")) {
 			if (e.getEntity().getType() == EntityType.valueOf(entity.toUpperCase()))
 				e.setCancelled(true);
 			return;
@@ -91,7 +106,7 @@ public class MineKing extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void spawnEvent(PlayerInteractEvent event) {
-		if (!getConfig().getBoolean("settings.block-spawner-egg-change")) {
+		if (!getConfig().getBoolean("settings.blockSpawnerEggChange")) {
 			return;
 		}
 		if (event.getClickedBlock() != null && event.getItem() != null
@@ -99,14 +114,14 @@ public class MineKing extends JavaPlugin implements Listener {
 				&& event.getItem().getType() == Material.MONSTER_EGG) {
 			event.setCancelled(true);
 			event.getPlayer()
-					.sendMessage("§6§lM§E§LK §8▶ §cBu işlemi gerçekleştiremezsiniz. §8(§6Spawner Egg Change§8)");
+					.sendMessage(getConfig().getString("settings.prefix") + " §cBu işlemi gerçekleştiremezsiniz. §8(§6Spawner Egg Change§8)");
 		}
 		return;
 	}
 
 	@EventHandler
 	public void onCactusDamage(EntityDamageEvent event) {
-		if (!getConfig().getBoolean("settings.block-cactus-damage")) {
+		if (!getConfig().getBoolean("settings.blockCactusDamage")) {
 			return;
 		}
 
@@ -118,12 +133,12 @@ public class MineKing extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void on(InventoryOpenEvent e) {
-		if (!getConfig().getBoolean("settings.block-trades")) {
+		if (!getConfig().getBoolean("settings.blockVillagerTrades")) {
 			return;
 		}
 		if (e.getInventory().getType() == InventoryType.MERCHANT) {
 			e.setCancelled(true);
-			e.getPlayer().sendMessage("§6§lM§E§LK §8▶ §cBu işlemi gerçekleştiremezsiniz. §8(§6Merchant§8)");
+			e.getPlayer().sendMessage(getConfig().getString("settings.prefix") + " §cBu işlemi gerçekleştiremezsiniz. §8(§6Merchant§8)");
 		}
 		return;
 	}
@@ -138,9 +153,19 @@ public class MineKing extends JavaPlugin implements Listener {
 		if (msg.contains("mvh") || msg.contains("mv") || msg.startsWith("mvh") || msg.startsWith("mv")
 				|| msg.endsWith("mvh") || msg.endsWith("mv")) {
 			event.setCancelled(true);
-			p.sendMessage("§6§lM§E§LK §8▶ §cBu işlemi gerçekleştiremezsiniz.");
+			p.sendMessage(getConfig().getString("settings.prefix") + " §cBu işlemi gerçekleştiremezsiniz.");
 		}
 		return;
 	}
 
+	@EventHandler
+	public void onCreateSpawn(CreatureSpawnEvent event) {
+		if (!getConfig().getBoolean("settings.blockWitherSpawn")) {
+			return;
+		}
+	    if (event.getEntity().getType() == EntityType.WITHER) {
+	        event.setCancelled(true);
+	    }
+	}
+	
 }

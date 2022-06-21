@@ -1,11 +1,14 @@
 # MINEKING CORE - BEAUTYBLOOD
 
 settings:
-   unicode-crash: true
-   block-spawner-egg-change: true
-   block-cactus-damage: true
-   block-trades: true
+   prefix: "§6§lM§e§lK §8>"
+   blockWitherSpawn: false
+   blockBlazeWaterDamage: false
+   unicodeCrash: true
+   blockSpawnerEggChange: true
+   blockCactusDamage: true
+   blockVillagerTrades: true
    # SpawnEvent
-   block-spawns: true
-   block-spawned-mobs:
-   - BARIS
+   blockMobSpawns: true
+   blockSpawnMobs:
+   - "MineKingSpecialMobContain"

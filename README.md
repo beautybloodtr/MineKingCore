@@ -6,3 +6,5 @@ Features:
   - cactus damage engelleyici
   - villager trade engelleyici
   - mob spawn (type ile) engelli
+  - block wither spawn
+  - block blaze water damage
